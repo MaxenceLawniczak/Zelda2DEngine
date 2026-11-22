@@ -5,11 +5,8 @@ import main.GamePanel;
 
 public class OBJ_Arrow extends Projectile{
 	
-	private GamePanel gp;
-	
 	public OBJ_Arrow(GamePanel gp) {
 		super(gp);
-		this.gp = gp;
 		
 		name = "Flèche";
 		speed = 15;
@@ -22,9 +19,9 @@ public class OBJ_Arrow extends Projectile{
 	}
 	
 	public void getImage() {
-		down1 = setup("/projectile/ArrowDown", gp.getTileSize(),gp.getTileSize());
-		up1 = setup("/projectile/ArrowUp", gp.getTileSize(),gp.getTileSize());
-		left1 = setup("/projectile/ArrowLeft", gp.getTileSize(),gp.getTileSize());
-		right1 = setup("/projectile/ArrowRight", gp.getTileSize(),gp.getTileSize());
+		down1 = setup("/projectile/arrow/ArrowDown", gp.getTileSize(),gp.getTileSize());
+		up1 = setup("/projectile/arrow/ArrowUp", gp.getTileSize(),gp.getTileSize());
+		left1 = setup("/projectile/arrow/ArrowLeft", gp.getTileSize(),gp.getTileSize());
+		right1 = setup("/projectile/arrow/ArrowRight", gp.getTileSize(),gp.getTileSize());
 	}
 }

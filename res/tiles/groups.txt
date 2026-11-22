@@ -1,0 +1,5 @@
+# Groupes de tiles toujours posés ensemble dans l'éditeur de map (ex : un arbre = 4 tiles).
+# Peindre une seule de ces tiles pose le groupe entier, et peindre par-dessus efface tout le groupe.
+# Format : nom | largeur hauteur | tiles ligne par ligne
+Arbre | 2 2 | 15 16 17 18
+Palmier | 2 2 | 147 148 149 150

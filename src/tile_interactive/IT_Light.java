@@ -27,10 +27,10 @@ public class IT_Light extends InteractiveTile {
         int tileSize = gp.getTileSize();
 
         animationFrames = new BufferedImage[] {
-            setup("/tiles_interactive/Light0", tileSize, tileSize),
-            setup("/tiles_interactive/Light1", tileSize, tileSize),
-            setup("/tiles_interactive/Light2", tileSize, tileSize),
-            setup("/tiles_interactive/Light3", tileSize, tileSize),
+            setup("/tiles_interactive/lights/Light0", tileSize, tileSize),
+            setup("/tiles_interactive/lights/Light1", tileSize, tileSize),
+            setup("/tiles_interactive/lights/Light2", tileSize, tileSize),
+            setup("/tiles_interactive/lights/Light3", tileSize, tileSize),
         };
     }
 

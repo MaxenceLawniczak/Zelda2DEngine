@@ -1,18 +1,16 @@
 package entity;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import main.GamePanel;
 
 public class Projectile extends Entity{
 
 	protected Entity user;
-	
+	protected boolean piercing = false; // Traverse les ennemis (arc de voyageur)
+
 	public Projectile(GamePanel gp) {
 		super(gp);
 	}
-	
+
 	public void set(int worldX, int worldY, String direction, boolean alive, Entity user) {
 		this.worldX = worldX;
 		this.worldY = worldY;
@@ -20,54 +18,67 @@ public class Projectile extends Entity{
 		this.alive = alive;
 		this.user = user;
 		this.life = this.maxLife;
-		
 	}
 
-	@SuppressWarnings("unused")
+	public void setPiercing(boolean piercing) {
+		this.piercing = piercing;
+	}
+	
+	public Entity getUser() {
+		return user;
+	}
+	
+	/** Renvoyé par un bouclier : le projectile repart dans l'autre sens et touche les monstres. */
+	public void reflect(Entity newUser) {
+		user = newUser;
+		piercing = false;
+		life = maxLife;
+		switch (direction) {
+		case "Up": direction = "Down"; break;
+		case "Down": direction = "Up"; break;
+		case "Left": direction = "Right"; break;
+		default: direction = "Left"; break;
+		}
+	}
+
+	@Override
 	public void update() {
-		
+
+		// Tiré par le joueur : touche les monstres
 		if(user == gp.getPlayer()) {
 			int monIndex = gp.getCChecker().checkEntity(this, gp.getMonTab());
 			if(monIndex != 999) {
 				gp.getPlayer().damageMonster(monIndex, attack);
-				alive = false;
+				if (!piercing) {
+					alive = false;
+					return;
+				}
 			}
 		}
-		if(user != gp.getPlayer()) {
+		// Tiré par un monstre : touche le joueur
+		else {
 			boolean contactPlayer = gp.getCChecker().checkPlayer(this);
 			if(!gp.getPlayer().isInvincible() && contactPlayer) {
 				damagePlayer(attack);
-				alive = false;
+				// Un bouclier peut avoir renvoyé le projectile : il repart vers les monstres
+				if (user != gp.getPlayer()) alive = false;
+				return;
 			}
 		}
-		
-		ArrayList<Entity> inventory = gp.getPlayer().getInventory();
-		int arrowIndex = gp.getPlayer().getArrowIndex();
-		BufferedImage image;
-		if (inventory.get(arrowIndex).getAmount() >= 0) {
-			switch(direction) {
-			case "Up":
-				image = up1;
-				worldY -= speed; break;
-			case "Down":
-				image = down1;
-				worldY += speed; break;
-			case "Left":
-				image = left1;
-				worldX -= speed; break;
-			case "Right":
-				image = right1;
-				worldX += speed; break;
-			}
+
+		switch(direction) {
+		case "Up":    worldY -= speed; break;
+		case "Down":  worldY += speed; break;
+		case "Left":  worldX -= speed; break;
+		case "Right": worldX += speed; break;
 		}
-		
+
 		life --;
 		collisionOn = false;
-		
+
 		gp.getCChecker().checkTile(this);
-		if(life<=0 || collisionOn) {
+		if(life <= 0 || collisionOn) {
 			alive = false;
 		}
-		
 	}
 }

@@ -11,7 +11,7 @@ public class OBJ_HealPot extends Entity{
 		type = typePotionSoin;
 		name = "Potion de soin";
 		value = 4;
-		down1 = setup("/objects/PotionSoin", gp.getTileSize(),gp.getTileSize());
+		down1 = setup("/objects/inventory/PotionSoin", gp.getTileSize(),gp.getTileSize());
 		
 		description = "[" + name + "]\n"
 				 + "Un fiole en verre remplie\n"

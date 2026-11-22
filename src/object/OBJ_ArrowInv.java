@@ -13,7 +13,7 @@ public class OBJ_ArrowInv extends Entity{
 		
 		type = typeArrow;
 		name = "Flèche";
-		down1 = setup("/objects/ArrowInventory", gp.getTileSize(),gp.getTileSize());
+		down1 = setup("/objects/inventory/ArrowInventory", gp.getTileSize(),gp.getTileSize());
 		//attackValue = 1;
 		description = "[" + name + "]\n"
 								 + "Une simple flèche en \n"

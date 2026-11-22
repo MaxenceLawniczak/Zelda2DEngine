@@ -1,188 +1,128 @@
 package main;
 
-import entity.NPC_OldMan;
-import object.OBJ_ArrowInv;
+import entity.Entity;
+import main.MapData.Placement;
 import object.OBJ_Chest;
-import object.OBJ_Door;
-import object.OBJ_Heart;
-import object.OBJ_Key;
-import monster.MON_Octo;
-import object.OBJ_RubisGreen;
-import tile_interactive.IT_BlockedPath;
-import tile_interactive.IT_Bush;
-import tile_interactive.IT_Grass;
-import tile_interactive.IT_HeavyRock;
-import tile_interactive.IT_Hole;
-import tile_interactive.IT_Light;
-import tile_interactive.IT_Rock;
-import tile_interactive.IT_WallLight;
+import tile_interactive.InteractiveTile;
 
+/**
+ * Place les objets, monstres, PNJ et tiles interactives de chaque map.
+ * Tout est décrit dans res/maps/mapXX_data.txt (modifiable avec l'éditeur de map).
+ */
 public class AssetSetter {
-	
+
 	private GamePanel gp;
-	
+	private MapData[] mapData;
+
 	public AssetSetter(GamePanel gp) {
 		this.gp = gp;
+		loadMapData();
 	}
-	
+
+	public void loadMapData() {
+		mapData = new MapData[gp.getMaxMap()];
+		for (int map = 0; map < gp.getMaxMap(); map++) {
+			mapData[map] = MapData.load(map + 1);
+		}
+	}
+
+	public MapData getMapData(int map) {
+		return mapData[map];
+	}
+
+	/** Relit le fichier d'une map et recrée tout son contenu (touche R en debug). */
+	public void reloadMap(int map) {
+		mapData[map] = MapData.load(map + 1);
+		setObject(map);
+		setNPC(map);
+		setMonster(map);
+		setInteractiveTiles(map);
+	}
+
 	public void setObject() {
-		
-		int mapNum = 0;
-		int i = 0;
-		
-		int[][] chest = {
-				{29, 44},{44, 8}
-		    };
-		    
-		    for (int[] coord : chest) {
-		        OBJ_Chest chestTile = new OBJ_Chest(gp);
-		        chestTile.setWorldX(gp.getTileSize() * coord[0]);
-		        chestTile.setWorldY(gp.getTileSize() * coord[1]);
-		        gp.setObj(mapNum,chestTile, i);
-		        i++;
-		    }
+		for (int map = 0; map < gp.getMaxMap(); map++) setObject(map);
 	}
-	
+
 	public void setMonster() {
-		int mapNum = 0;
-		int i = 0;
-		MON_Octo octo1 = new MON_Octo(gp);
-	    octo1.setWorldX(gp.getTileSize() * 12);
-	    octo1.setWorldY(gp.getTileSize() * 10);
-	    gp.setMon(mapNum, octo1, i);
-	    /*
-	    i++;
-	    
-	    MON_Octo octo2 = new MON_Octo(gp);
-	    octo2.setWorldX(gp.getTileSize() * 15);
-	    octo2.setWorldY(gp.getTileSize() * 41);
-	    gp.setMon(mapNum, octo2, i);
-	    
-	    i++;
-	    
-	    MON_Octo octo3 = new MON_Octo(gp);
-	    octo3.setWorldX(gp.getTileSize() * 15);
-	    octo3.setWorldY(gp.getTileSize() * 6);
-	    gp.setMon(mapNum, octo3, i);*/
+		for (int map = 0; map < gp.getMaxMap(); map++) setMonster(map);
 	}
-	
+
 	public void setNPC() {
-		
-		int mapNum = 0;
-		int i = 0;
-		
-		int[][] npcCoords = {
-				/*{30, 35}*/
-		    };
-		    
-		    for (int[] coord : npcCoords) {
-		        NPC_OldMan npc = new NPC_OldMan(gp);
-		        npc.setWorldX(coord[0]);
-		        npc.setWorldY(coord[1]);
-		        gp.setNPC(mapNum, npc, i);
-		        i++;
-		    }
-		
+		for (int map = 0; map < gp.getMaxMap(); map++) setNPC(map);
 	}
-	
+
 	public void setInteractiveTiles() {
-		int mapNum = 0;
+		for (int map = 0; map < gp.getMaxMap(); map++) setInteractiveTiles(map);
+	}
+
+	private void setObject(int map) {
 		int i = 0;
-		
-		int[][] blockedCoords = {
-				{30, 35}
-		    };
-		    
-		    for (int[] coord : blockedCoords) {
-		        IT_BlockedPath blockedTile = new IT_BlockedPath(gp, coord[0], coord[1]);
-		        gp.setItile(mapNum,blockedTile, i);
-		        i++;
-		    }
-		
-		int[][] grassCoords = {
-				{42, 1},{43, 1},{44, 1},{45, 1},{46, 1},{47, 1},{48, 1},
-				{42, 2},{43, 2},{44, 2},{45, 2},{46, 2},{47, 2},{48, 2},
-				{43, 3},{44, 3},{45, 3},{46, 3},{47, 3},{48, 3},
-				{45, 4},{46, 4},{47, 4},{48, 4},
-				{28, 33},{29, 33},{30, 33},{31, 33},{32, 33},{33, 33},
-				{28, 32},{29, 32},{30, 32},{31, 32},
-				{28, 31},{29, 31}
-		    };
-		    
-		    for (int[] coord : grassCoords) {
-		        IT_Grass grassTile = new IT_Grass(gp, coord[0], coord[1]);
-		        gp.setItile(mapNum,grassTile, i);
-		        i++;
-		    }
-		    
-		int[][] bushCoords = {
-				{46,15},
-				{30,28},{31,28},{32,28},
-				{33,29},{34,29},{35,29},
-			};
-			    
-			    for (int[] coord : bushCoords) {
-			        IT_Bush bushTile = new IT_Bush(gp, coord[0], coord[1]);
-			        gp.setItile(mapNum,bushTile, i);
-			        i++;
-			    }
-			    
-		int[][] heavyRockCoords = {
-						
-				    };
-				    
-				    for (int[] coord : heavyRockCoords) {
-				        IT_HeavyRock rockTile = new IT_HeavyRock(gp, coord[0], coord[1]);
-				        gp.setItile(mapNum,rockTile, i);
-				        i++;
-				    }
-				    
-		int[][] rockCoords = {
-							{35,38},{34,39}
-					    };
-					    
-					    for (int[] coord : rockCoords) {
-					        IT_Rock rockTile = new IT_Rock(gp, coord[0], coord[1]);
-					        gp.setItile(mapNum,rockTile, i);
-					        i++;
-					    }
-					    
-		int[][] holeCoords = {
-							{34,38}
-						};
-						    
-						    for (int[] coord : holeCoords) {
-						        IT_Hole holeTile = new IT_Hole(gp, coord[0], coord[1]);
-						        gp.setItile(mapNum,holeTile, i);
-						        i++;
-						    }
-		
-		mapNum ++;
-		Object[][] wallLightData = {
-			{18, 0, "up"}, {22, 0, "up"}, {21, 49, "down"}, {30, 49, "down"}
-		};
+		int max = gp.getObjTab().length;
+		for (Placement p : mapData[map].get(MapData.OBJECT)) {
+			if (i >= max) { tooMany("objets", map); break; }
+			Entity obj = EntityFactory.createItem(gp, p.id);
+			if (obj == null) continue;
 
-		for (Object[] data : wallLightData) {
-			int col = (int) data[0];
-			int row = (int) data[1];
-			String direction = (String) data[2];
-						    	    
-			IT_WallLight light = new IT_WallLight(gp, col, row, direction);
-			gp.setItile(mapNum, light, i);
-			i++;
+			// Contenu du coffre / paramètres (texte d'un panneau, drapeau d'une porte...)
+			if (obj instanceof OBJ_Chest && p.args.length > 0) {
+				Entity loot = EntityFactory.createItem(gp, p.args[0]);
+				if (loot != null) loot.configure(java.util.Arrays.copyOfRange(p.args, 1, p.args.length));
+				((OBJ_Chest) obj).setLoot(loot);
+			} else {
+				obj.configure(p.args);
+			}
+
+			// Les petits objets (cœurs, rubis) sont centrés sur la case
+			int offset = obj.isPickUpOnly() ? gp.getTileSize() / 4 : 0;
+			obj.setWorldX(gp.getTileSize() * p.col + offset);
+			obj.setWorldY(gp.getTileSize() * p.row + offset);
+			gp.setObj(map, obj, i++);
 		}
+		while (i < max) gp.setObj(map, null, i++);
+	}
 
-		int[][] lightCoords = {
-			    {21, 45},
-			    {23, 46},
-			    {28, 46},
-			    {30, 45}
-			};
-		for (int[] coord : lightCoords) {
-		    IT_Light lightTile = new IT_Light(gp, coord[0], coord[1]);
-		    gp.setItile(mapNum, lightTile, i);
-		    i++;
+	private void setMonster(int map) {
+		int i = 0;
+		int max = gp.getMonTab().length;
+		for (Placement p : mapData[map].get(MapData.MONSTER)) {
+			if (i >= max) { tooMany("monstres", map); break; }
+			Entity mon = EntityFactory.create(gp, MapData.MONSTER, p.id);
+			if (mon == null) continue;
+			mon.setWorldX(gp.getTileSize() * p.col);
+			mon.setWorldY(gp.getTileSize() * p.row);
+			gp.setMon(map, mon, i++);
 		}
+		while (i < max) gp.setMon(map, null, i++);
+	}
 
+	private void setNPC(int map) {
+		int i = 0;
+		int max = gp.getNPCTab().length;
+		for (Placement p : mapData[map].get(MapData.NPC)) {
+			if (i >= max) { tooMany("PNJ", map); break; }
+			Entity npc = EntityFactory.create(gp, MapData.NPC, p.id);
+			if (npc == null) continue;
+			npc.configure(p.args);
+			npc.setWorldX(gp.getTileSize() * p.col);
+			npc.setWorldY(gp.getTileSize() * p.row);
+			gp.setNPC(map, npc, i++);
+		}
+		while (i < max) gp.setNPC(map, null, i++);
+	}
+
+	private void setInteractiveTiles(int map) {
+		int i = 0;
+		int max = gp.getItileTab().length;
+		for (Placement p : mapData[map].get(MapData.TILE)) {
+			if (i >= max) { tooMany("tiles interactives", map); break; }
+			InteractiveTile tile = EntityFactory.createTile(gp, p.id, p.col, p.row, p.args);
+			if (tile == null) continue;
+			gp.setItile(map, tile, i++);
+		}
+		while (i < max) gp.setItile(map, null, i++);
+	}
+
+	private void tooMany(String what, int map) {
+		System.err.println("Trop de " + what + " sur la map " + (map + 1) + " : les derniers sont ignorés.");
 	}
 }

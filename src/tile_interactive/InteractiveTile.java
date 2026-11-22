@@ -1,11 +1,7 @@
 package tile_interactive;
 
-import java.util.Random;
-
 import entity.Entity;
 import main.GamePanel;
-import object.OBJ_Heart;
-import object.OBJ_RubisGreen;
 
 public class InteractiveTile extends Entity{
 
@@ -25,6 +21,22 @@ public class InteractiveTile extends Entity{
 
 	public boolean isDestructible() {
 		return destructible;
+	}
+
+	/** Bloque-t-elle le passage ? (l'herbe et les dalles non) */
+	public boolean isSolid() {
+		return true;
+	}
+
+	/** Appelé quand le joueur frappe la tile avec son arme (torches...). */
+	public void onStrike(entity.Player player) {}
+
+	public int getCol() {
+		return col;
+	}
+
+	public int getRow() {
+		return row;
 	}
 	
 }

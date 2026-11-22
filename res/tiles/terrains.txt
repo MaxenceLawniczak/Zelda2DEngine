@@ -1,0 +1,8 @@
+# Terrains de l'outil "Terrain" de l'éditeur de map : on peint la zone, les bords se posent tout seuls.
+# Masque des bords = quarts de la case touchés par la zone : HautGauche HautDroite BasGauche BasDroite
+# (ex : 0011 = la zone touche le bas de la case -> bord du haut de la zone).
+#
+# nom | zone <tiles qui font partie de la zone> | base <tile peinte> | dehors <tile quand un bord disparaît>
+#     | modifiables <tiles qu'on a le droit de transformer en bord> | bords <masque:tile ...> | ensuite <autre terrain>
+Eau (lac) | zone 111 | base 111 | dehors 79 | modifiables 0 1 2 3 4 5 6 7 8 9 10 14 79 80 | bords 0011:125 0101:123 1010:122 1100:120 0111:126 1011:124 1101:121 1110:119 0001:79 0010:79 0100:79 1000:79 1111:111 1001:111 0110:111 | ensuite Chemin de sable
+Chemin de sable | zone 14 79 80 111 119 120 121 122 123 124 125 126 | base 79 | dehors 0 | modifiables 0 1 | bords 0011:9 0101:6 1010:3 1100:8 0111:7 1011:4 1101:5 1110:2 1111:10 1001:79 0110:79

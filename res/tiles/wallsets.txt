@@ -1,0 +1,12 @@
+# Jeux de murs des outils "Salle" et "Tracé" de l'éditeur de map (modifiables dans l'éditeur).
+# Format : nom | coinHautGauche haut coinHautDroit gauche droite coinBasGauche bas coinBasDroit | sol
+#                [| inner coinIntHG coinIntHD coinIntBG coinIntBD] [| under tileSousLeHaut]
+#      ou : nom | pattern <largeur> <hauteur> <tiles du motif...> | sol
+#      ou : nom | cliff pit|plateau | sol   (falaise : fosse = niveau inférieur, plateau = niveau supérieur)
+# -1 = rien / automatique.
+Falaise - fosse (niveau inférieur) | cliff pit | -1
+Falaise - plateau (niveau supérieur) | cliff plateau | -1
+Donjon (briques vertes) | 180 181 182 183 185 186 187 188 | 184 | inner 189 190 191 192
+Tapis rouge | 201 202 203 204 206 207 208 209 | 205 | inner 210 213 211 212
+Haie d'arbres | pattern 2 2 15 16 17 18 | 0
+Clairière dans la forêt | pattern 2 2 15 16 17 18 | 1

@@ -8,9 +8,9 @@ public class OBJ_Weak_Shield extends Entity{
 	public OBJ_Weak_Shield(GamePanel gp) {
 		super(gp);
 
-		type = typeWeakShield;
+		type = typeShield;
 		name = "Petit Bouclier";
-		down1 = setup("/objects/WeakShield", gp.getTileSize(),gp.getTileSize());
+		down1 = setup("/objects/shields/WeakShield", gp.getTileSize(),gp.getTileSize());
 		defenseValue = 1;
 		description = "[" + name + "]\n"
 								 + "Un bouclier en bois marqué \n"
@@ -20,5 +20,16 @@ public class OBJ_Weak_Shield extends Entity{
 								 + "peut encore encaisser \n"
 								 + "quelques coups avant de "
 								 + "\nrendre l’âme.";
+
+		// Durabilité et spécificité
+		maxDurability = 12;
+		durability = maxDurability;
+		specialName = "Léger";
+		specialDescription = "Si léger qu'on se déplace à vitesse normale en se protégeant.";
+	}
+
+	@Override
+	public boolean canMoveWhileGuarding() {
+		return true;
 	}
 }

@@ -32,43 +32,43 @@ public class IT_WallLight extends InteractiveTile {
         switch (direction.toLowerCase()) {
             case "up":
                 animationFrames = new BufferedImage[] {
-                    setup("/tiles_interactive/WallLightUp0", tileSize, tileSize),
-                    setup("/tiles_interactive/WallLightUp1", tileSize, tileSize),
-                    setup("/tiles_interactive/WallLightUp2", tileSize, tileSize),
-                    setup("/tiles_interactive/WallLightUp3", tileSize, tileSize),
+                    setup("/tiles_interactive/lights/WallLightUp0", tileSize, tileSize),
+                    setup("/tiles_interactive/lights/WallLightUp1", tileSize, tileSize),
+                    setup("/tiles_interactive/lights/WallLightUp2", tileSize, tileSize),
+                    setup("/tiles_interactive/lights/WallLightUp3", tileSize, tileSize),
                 };
                 break;
 
             case "down":
                 animationFrames = new BufferedImage[] {
-                        setup("/tiles_interactive/WallLightDown0", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightDown1", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightDown2", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightDown3", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightDown0", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightDown1", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightDown2", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightDown3", tileSize, tileSize),
                 };
                 break;
 
             case "left":
                 animationFrames = new BufferedImage[] {
-                        setup("/tiles_interactive/WallLightLeft0", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightLeft1", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightLeft2", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightLeft3", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightLeft0", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightLeft1", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightLeft2", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightLeft3", tileSize, tileSize),
                 };
                 break;
 
             case "right":
                 animationFrames = new BufferedImage[] {
-                        setup("/tiles_interactive/WallLightRight0", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightRight1", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightRight2", tileSize, tileSize),
-                        setup("/tiles_interactive/WallLightRight3", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightRight0", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightRight1", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightRight2", tileSize, tileSize),
+                        setup("/tiles_interactive/lights/WallLightRight3", tileSize, tileSize),
                 };
                 break;
 
             default:
                 animationFrames = new BufferedImage[] {
-                    setup("/tiles_interactive/WallLightUp0", tileSize, tileSize)
+                    setup("/tiles_interactive/lights/WallLightUp0", tileSize, tileSize)
                 };
                 break;
         }

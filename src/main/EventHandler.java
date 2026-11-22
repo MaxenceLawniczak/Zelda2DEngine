@@ -1,63 +1,86 @@
 package main;
 
-import java.awt.Rectangle;
-
 import entity.Player;
+import main.MapData.Placement;
 
+/**
+ * Événements déclenchés quand le joueur marche sur une case (trou, source de soin, téléporteur).
+ * Ils sont décrits dans res/maps/mapXX_data.txt (lignes "event ...") et modifiables avec l'éditeur.
+ */
 public class EventHandler {
 
     private GamePanel gp;
-    private Rectangle[][][] eventRect;
-    private int eventRectDefaultX, eventRectDefaultY;
+
+    // Après un événement, il faut s'éloigner d'une case avant d'en redéclencher un
+    // (sinon le trou ferait perdre de la vie à chaque frame)
+    private int previousEventX, previousEventY;
+    private boolean canTouchEvent = true;
 
     public EventHandler(GamePanel gp) {
         this.gp = gp;
-
-        int maxMap = gp.getMaxMap();
-        int maxWorldCols = gp.getMaxWorldCols();
-        int maxWorldRows = gp.getMaxWorldRows();
-
-        eventRect = new Rectangle[maxMap][maxWorldCols][maxWorldRows];
-
-        for (int map = 0; map < maxMap; map++) {
-            for (int col = 0; col < maxWorldCols; col++) {
-                for (int row = 0; row < maxWorldRows; row++) {
-                    eventRect[map][col][row] = new Rectangle();
-                    eventRect[map][col][row].x = 0;
-                    eventRect[map][col][row].y = 0;
-                    eventRect[map][col][row].width = gp.getTileSize();
-                    eventRect[map][col][row].height = gp.getTileSize();
-                }
-            }
-        }
-
-        eventRectDefaultX = 0;
-        eventRectDefaultY = 0;
     }
 
     public void checkEvent() {
-        // Exemples de coordonnées d'événements spécifiques
-        if (hit(0, 27, 16, "Any")) {
-            damagePit(gp.getDialogueState());
-        }
 
-        if (hit(0, 23, 12, "Up")) {
-            healingPool(gp.getDialogueState());
-        }
-        
-        if(hit(0,30,35,"Up")) {
-            teleport(1,25,48);
-        }
+    	// Le joueur s'est-il assez éloigné du dernier événement ?
+    	int xDistance = Math.abs(gp.getPlayer().getWorldX() - previousEventX);
+    	int yDistance = Math.abs(gp.getPlayer().getWorldY() - previousEventY);
+    	if (Math.max(xDistance, yDistance) > gp.getTileSize()) {
+    		canTouchEvent = true;
+    	}
 
-        if(hit(1,24,49,"Down") || hit(1,25,49,"Down") || hit(1,26,49,"Down") || hit(1,27,49,"Down")) {
-        	teleport(0,30,36);
-        }
+    	if (!canTouchEvent) {
+    		return;
+    	}
+
+    	MapData data = gp.getASetter().getMapData(gp.getCurrentMap());
+    	for (Placement event : data.get(MapData.EVENT)) {
+    		String direction = event.arg(0, "any");
+    		if (!hit(gp.getCurrentMap(), event.col, event.row, direction)) {
+    			continue;
+    		}
+    		switch (event.id) {
+    		case "pit":
+    			damagePit(gp.getDialogueState());
+    			return;
+    		case "heal":
+    			healingPool(gp.getDialogueState());
+    			return;
+    		case "message":
+    			// Message affiché une seule fois (ex : "Une étrange brume flotte ici...")
+    			String key = "msg_" + gp.getCurrentMap() + "_" + event.col + "_" + event.row;
+    			if (!gp.hasFlag(key)) {
+    				gp.setFlag(key);
+    				String text = String.join(" ", java.util.Arrays.copyOfRange(event.args, 1, event.args.length));
+    				gp.ui.getDialogueBox().start(null, text.split("\\s*//\\s*"));
+    				gp.getkH().releaseAll();
+    			}
+    			eventDone();
+    			return;
+    		case "teleport":
+    			// Les numéros de map dans le fichier commencent à 1
+    			teleport(event.argInt(1, 1) - 1, event.argInt(2, 0), event.argInt(3, 0));
+    			return;
+    		default:
+    			System.err.println("Événement inconnu : " + event.id);
+    		}
+    	}
+    }
+
+    private void eventDone() {
+    	previousEventX = gp.getPlayer().getWorldX();
+    	previousEventY = gp.getPlayer().getWorldY();
+    	canTouchEvent = false;
     }
 
     private void damagePit(int gameState) {
         gp.setGameState(gameState);
         gp.ui.setCurrentDialogue("Vous tombez dans un trou !");
-        gp.getPlayer().setLife(gp.getPlayer().getLife() - 1);
+        if (!gp.getDebug().isGodMode()) {
+        	gp.getPlayer().setLife(gp.getPlayer().getLife() - 1);
+        }
+        gp.getkH().releaseAll();
+        eventDone();
     }
 
     private void healingPool(int gameState) {
@@ -73,11 +96,17 @@ public class EventHandler {
             }
 
             gp.getkH().setEnter(false);
+            eventDone();
         }
     }
 
+    /** Le joueur touche-t-il la case (col, row) de cette map en regardant dans la bonne direction ? */
     public boolean hit(int map, int eventCol, int eventRow, String reqDirection) {
-        boolean hit = false;
+
+        // L'événement n'existe que sur sa propre map
+        if (map != gp.getCurrentMap()) {
+        	return false;
+        }
 
         Player player = gp.getPlayer();
 
@@ -87,38 +116,22 @@ public class EventHandler {
         int playerTopWorldY = player.getWorldY() + player.getSolidArea().y;
         int playerBottomWorldY = playerTopWorldY + player.getSolidArea().height;
 
-        Rectangle rect = eventRect[map][eventCol][eventRow];
-        rect.x = eventCol * gp.getTileSize() + eventRectDefaultX;
-        rect.y = eventRow * gp.getTileSize() + eventRectDefaultY;
+        int rectLeftX = eventCol * gp.getTileSize();
+        int rectRightX = rectLeftX + gp.getTileSize();
+        int rectTopY = eventRow * gp.getTileSize();
+        int rectBottomY = rectTopY + gp.getTileSize();
 
-        int rectLeftX = rect.x;
-        int rectRightX = rect.x + rect.width;
-        int rectTopY = rect.y;
-        int rectBottomY = rect.y + rect.height;
-
-        // Collision simple
         boolean intersects =
                 playerRightWorldX > rectLeftX &&
                 playerLeftWorldX < rectRightX &&
                 playerBottomWorldY > rectTopY &&
                 playerTopWorldY < rectBottomY;
 
-        if (intersects) {
-            if (reqDirection.equals("Any") || reqDirection.equals(player.getDirection())) {
-                hit = true;
-            }
-        }
-
-        // Reset les valeurs de la hitbox pour éviter des bugs ultérieurs
-        rect.x = eventRectDefaultX;
-        rect.y = eventRectDefaultY;
-
-        return hit;
+        return intersects && (reqDirection.equalsIgnoreCase("any") || reqDirection.equalsIgnoreCase(player.getDirection()));
     }
-    
+
     public void teleport(int map, int col, int row) {
-    	gp.setCurrentMap(map);
-    	gp.getPlayer().setWorldX(gp.getTileSize() * col);
-    	gp.getPlayer().setWorldY(gp.getTileSize() * row);
+    	gp.teleportPlayer(map, col, row);
+    	eventDone();
     }
 }

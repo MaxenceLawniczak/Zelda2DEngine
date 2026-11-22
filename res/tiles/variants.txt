@@ -1,0 +1,6 @@
+# Variantes aléatoires des pinceaux de l'éditeur de map.
+# Quand on peint la tile de gauche, l'éditeur pose au hasard une des tiles de droite selon leur poids.
+# Format : tile = variante*poids variante*poids ...
+# (désactivable avec le bouton "Variantes" de la barre d'outils)
+0 = 0*85 1*15
+79 = 79*75 80*25

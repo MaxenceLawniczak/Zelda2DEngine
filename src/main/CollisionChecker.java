@@ -1,9 +1,7 @@
 package main;
 
 import entity.Entity;
-import entity.NPC_OldMan;
-import monster.MON_Octo;
-import tile_interactive.IT_Grass;
+import tile_interactive.InteractiveTile;
 
 public class CollisionChecker {
 	
@@ -97,7 +95,7 @@ public class CollisionChecker {
 				if(entity.getSolidArea().intersects(gp.getObj(i).getSolidArea())) {
 					if(gp.getObj(i).isCollision())
 						entity.setCollisionOn(true);
-					if(player = true)
+					if(player)
 						index = i;
 				}
 				
@@ -136,7 +134,7 @@ public class CollisionChecker {
 
 	            if (entity.getSolidArea().intersects(target[i].getSolidArea())) {
 	                if (target[i] != entity) {
-	                    if (!(target[i] instanceof IT_Grass)) {
+	                    if (!(target[i] instanceof InteractiveTile) || ((InteractiveTile) target[i]).isSolid()) {
 	                        entity.setCollisionOn(true);
 	                    }
 	                    index = i;
@@ -175,18 +173,10 @@ public class CollisionChecker {
 	    }
 
 	    // Vérification de la collision avec le joueur
+	    // (les dégâts sont gérés par l'entité elle-même via damagePlayer)
 	    if(entity.getSolidArea().intersects(gp.getPlayer().getSolidArea())) {
 	        entity.setCollisionOn(true);
 	        contactPlayer = true;
-	        
-	        // Si c'est un monstre, infliger des dégâts
-	        if (!(entity instanceof NPC_OldMan)) {
-	            // Si le joueur n'est pas invincible, lui infliger des dégâts
-	            if (!gp.getPlayer().isInvincible()) {
-	                gp.getPlayer().setLife(gp.getPlayer().getLife() - 1);
-	                gp.getPlayer().setInvincible(true);  // Le joueur devient invincible après la collision
-	            }
-	        }
 	    }
 
 	    // Réinitialisation des zones solides après la vérification

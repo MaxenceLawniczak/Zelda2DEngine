@@ -1,0 +1,7 @@
+# Contenu de la map (généré par l'éditeur de map, modifiable à la main)
+# object <id> <col> <row> [contenu du coffre] | monster/npc/tile <id> <col> <row> [args]
+# event pit|heal <col> <row> <dir> | event teleport <col> <row> <dir> <map> <col> <row>
+
+name Fôret de l'oubli
+
+spawn 6 9

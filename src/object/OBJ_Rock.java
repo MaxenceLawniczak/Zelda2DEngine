@@ -5,11 +5,8 @@ import main.GamePanel;
 
 public class OBJ_Rock extends Projectile{
 	
-	private GamePanel gp;
-	
 	public OBJ_Rock(GamePanel gp) {
 		super(gp);
-		this.gp = gp;
 		
 		name = "Caillou";
 		speed = 10;
@@ -22,9 +19,9 @@ public class OBJ_Rock extends Projectile{
 	}
 	
 	public void getImage() {
-		down1 = setup("/projectile/Rock", gp.getTileSize(),gp.getTileSize());
-		up1 = setup("/projectile/Rock", gp.getTileSize(),gp.getTileSize());
-		left1 = setup("/projectile/Rock", gp.getTileSize(),gp.getTileSize());
-		right1 = setup("/projectile/Rock", gp.getTileSize(),gp.getTileSize());
+		down1 = setup("/projectile/rock/Rock", gp.getTileSize(),gp.getTileSize());
+		up1 = setup("/projectile/rock/Rock", gp.getTileSize(),gp.getTileSize());
+		left1 = setup("/projectile/rock/Rock", gp.getTileSize(),gp.getTileSize());
+		right1 = setup("/projectile/rock/Rock", gp.getTileSize(),gp.getTileSize());
 	}
 }

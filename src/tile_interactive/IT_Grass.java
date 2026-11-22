@@ -16,6 +16,11 @@ public class IT_Grass extends InteractiveTile{
 		down1 = setup("/tiles_interactive/Grass", gp.getTileSize(), gp.getTileSize());
 		destructible = true;
 	}
+
+	@Override
+	public boolean isSolid() {
+		return false;
+	}
 	
 	public void checkDrop() {
         int i = new Random().nextInt(100) + 1;
